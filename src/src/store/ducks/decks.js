@@ -6,18 +6,22 @@ import { Map } from "immutable";
 const { Types, Creators } = createActions({
   requestDecks: null,
   requestDecksSuccess: ["decks"],
-  requestDecksFailed: ["error"],
 
-  addDeck: ["title"],  
-  addDeckSuccess: ["title"],
-  addDeckFailed: ["error"],
+  addDeck: ["title"],
+  addDeckSuccess: ["key", "title"],
 
-  addCard: ["title", "card"],
-  addCardSuccess: ["title", "card", "newKey"],
-  addCardFailed: ["error"],
+  updateDeck: ["deck"],
+  updateDeckSuccess: ["deck"],
 
-  selectedCard: ["card"]
+  deleteDeck: ["key"],
+  deleteDeckSuccess: ["key"],
 
+  addCard: ["key", "card"],
+  addCardSuccess: ["key", "card"],
+
+  failed: ["error"],
+
+  selectedDeck: ["deck"]
 });
 
 export { Types };
@@ -25,100 +29,142 @@ export default Creators;
 
 /* Initial State */
 const INITIAL_STATE = {
-  decks: { },
+  decks: {},
   loading: false,
   error: null,
-  added: false,
-  cardSelected: null
+  success: false,
+  deckSelected: null
 };
 
 /* Reducers */
 
-export const request = (state, action) => ({ 
-    ...state,
-    loading: true,
-    error: null
+export const request = (state, action) => ({
+  ...state,
+  loading: true,
+  error: null
 });
 
-export const success = (state, action) => ({
-    ...state,
-    decks: action.decks,
-    loading: false,
-    error: null
-});
-
-export const failed = (state, action) => ({
-    ...state,
-    loading: false,
-    error: action.error
+export const requestSuccess = (state, action) => ({
+  ...state,
+  decks: action.decks,
+  loading: false,
+  error: null
 });
 
 export const addDeck = state => ({
   ...state,
   loading: true,
   error: null,
-  added: false
+  success: false
 });
 
 export const addDeckSuccess = (state, action) => ({
   ...state,
   loading: false,
   error: null,
-  decks: { ...state.decks, [action.title]: { title: action.title } },
-  added: true
+  decks: { ...state.decks, [action.key]: { title: action.title, key: action.key } },
+  success: true
 });
 
-export const addDeckFailed = (state, action) => ({
+export const updateDeck = (state, action) => ({
+  ...state,
+  loading: true,
+  error: null,
+  success: false
+});
+
+export const updateDeckSuccess = (state, { deck }) => ({
   ...state,
   loading: false,
-  error: action.error
+  error: null,
+  decks: {
+    ...state.decks,
+    [deck.key]: { ...state.decks[deck.key], title: deck.title }
+  },
+  success: true
 });
+
+export const deleteDeck = (state, action) => ({
+  ...state,
+  loading: true,
+  error: null,
+  success: false,
+});
+
+export const deleteDeckSuccess = (state, action) => {
+  const { decks } = state;
+  // remove deck
+  delete decks[action.key];
+  return ({
+    ...state,
+    loading: false,
+    error: false,
+    success: true,
+    decks: decks
+  });
+}
+
+/* CARD */
 
 export const addCard = state => ({
   ...state,
   loading: true,
   error: null,
-  added: false
+  success: false
 });
 
 export const addCardSuccess = (state, action) => {
   const { decks } = state;
-  return ({
+  return {
     ...state,
     loading: false,
     error: null,
-    decks: { ...decks, 
-      [action.title]: { ...decks[action.title], 
-        "questions": { ...decks[action.title]["questions"], 
-        [action.newKey]: action.card } }},
-    added: true,
-    cardSelected: { ...state.cardSelected, cardCount: state.cardSelected.cardCount + 1 }
-  })
+    decks: {
+      ...decks,
+      [action.key]: {
+        ...decks[action.key],
+        questions: {
+          ...decks[action.key]["questions"],
+          [action.card.key]: action.card
+        }
+      }
+    },
+    success: true,
+    deckSelected: {
+      ...state.deckSelected,
+      cardCount: state.deckSelected.cardCount + 1
+    }
+  };
 };
 
-export const addCardFailed = (state, action) => ({
+export const selectedDeck = (state, action) => ({
+  ...state,
+  deckSelected: action.deck
+});
+
+export const failed = (state, action) => ({
   ...state,
   loading: false,
   error: action.error
 });
 
-export const selectedCard = (state, action) => ({
-  ...state,
-  cardSelected: action.card
-})
-
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.REQUEST_DECKS]: request,
-  [Types.REQUEST_DECKS_SUCCESS]: success,
-  [Types.REQUEST_DECKS_FAILED]: failed,
+  [Types.REQUEST_DECKS_SUCCESS]: requestSuccess,
 
   [Types.ADD_DECK]: addDeck,
   [Types.ADD_DECK_SUCCESS]: addDeckSuccess,
-  [Types.ADD_DECK_FAILED]: addDeckFailed,
+
+  [Types.UPDATE_DECK]: updateDeck,
+  [Types.UPDATE_DECK_SUCCESS]: updateDeckSuccess,
+
+  [Types.DELETE_DECK]: deleteDeck,
+  [Types.DELETE_DECK_SUCCESS]: deleteDeckSuccess,
 
   [Types.ADD_CARD]: addCard,
-  [Types.ADD_CARD_SUCCESS] : addCardSuccess,
-  [Types.ADD_CARD_FAILED]: addCardFailed,
+  [Types.ADD_CARD_SUCCESS]: addCardSuccess,
 
-  [Types.SELECTED_CARD]: selectedCard
+  [Types.SELECTED_DECK]: selectedDeck,
+
+  [Types.FAILED]: failed
 });

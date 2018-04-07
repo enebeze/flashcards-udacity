@@ -9,24 +9,45 @@ export function* requestDecks() {
     const response = yield call(api.getAll);
     yield put(DecksActions.requestDecksSuccess(response.val()));
   } catch (error) {
-    yield put(DecksActions.requestDecksFailed(error));
+    yield put(DecksActions.failed(error));
   }
 }
 
 export function* addDeck(action) {
   try {
-    yield call(api.addDeck, action.title);
-    yield put(DecksActions.addDeckSuccess(action.title));
+    const key = yield call(api.addDeck, action.title);
+    yield put(DecksActions.addDeckSuccess(key, action.title));
   } catch (error) {
-    yield put(DecksActions.addDeckFailed(error));
+    yield put(DecksActions.failed(error));
   }
 }
 
+export function* updateDeck(action) {
+  const { key, title } = action.deck;
+  try {
+    yield call(api.updateDeck, key, title);
+    yield put(DecksActions.updateDeckSuccess(action.deck)); 
+  } catch (error) {
+    yield put(DecksActions.failed(error));
+  }
+}
+
+export function* deleteDeck(action) {
+  try {
+    yield call(api.deleteDeck, action.key);
+    yield put(DecksActions.deleteDeckSuccess(action.key));
+  } catch (error) {
+    yield put(DecksActions.failed(error));
+  }
+}
+
+/* CARDS */
+
 export function* addCard(action) {
   try {
-    const response = yield call(api.addCard, action.title, action.card);
-    yield put(DecksActions.addCardSuccess(action.title, action.card, response));
+    action.card.key = yield call(api.addCard, action.key, action.card);
+    yield put(DecksActions.addCardSuccess(action.key, action.card));
   } catch (error) {
-    yield put(DecksActions.addCardFailed(error));
+    yield put(DecksActions.failed(error));
   }
 }

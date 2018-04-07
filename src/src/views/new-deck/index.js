@@ -19,35 +19,58 @@ import DecksAction from "store/ducks/decks";
 import { connect } from "react-redux";
 
 class NewDeck extends Component {
-  static navigationOptions = ({navigation}) => ({
-    title: "New Deck",
-    headerLeft: (
-      <ButtonHeader
-        iconName={Platform.OS === "ios" ? "ios-arrow-back" : "md-arrow-back" }
-        left
-        onPress={() => navigation.goBack(null)}
-      />
-    )
-  });
-
-  state = {
-    title: ""
+  static navigationOptions = ({ navigation }) => {
+    const { state: { params }} = navigation;
+    return {
+      title: params ? "Edit Deck" : "New Deck",
+      headerLeft: (
+        <ButtonHeader
+          iconName={Platform.OS === "ios" ? "ios-arrow-back" : "md-arrow-back"}
+          left
+          onPress={() => navigation.goBack(null)}
+        />
+      )
+    };
   };
 
+  state = {
+    title: "",
+    key: null
+  };
+
+  componentDidMount() {
+    const { state: { params }} = this.props.navigation;
+    if (params) {
+      this.setState({ title: params.title, key: params.key });
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
-    const { added, error } = nextProps.decksState;
-    if (added) {
-      this.dropdown.alertWithType("success", "Success", "New deck added successfully.");
+    const { success, error } = nextProps.decksState;
+    if (success) {
+      this.dropdown.alertWithType(
+        "success",
+        "Success",
+        "New deck saved successfully."
+      );
       this.setState({ title: "" });
-    } 
+    }
     if (error) {
-        this.dropdown.alertWithType("error", "Error", error.toString());
+      this.dropdown.alertWithType("error", "Error", error.toString());
     }
   }
 
   addDeck = () => {
     Keyboard.dismiss();
-    this.props.addDeck(this.state.title);
+    const { title, key } = this.state;
+
+    if (key) {
+      this.props.updateDeck({ title, key });
+    }
+    else {
+      this.props.addDeck(title);
+    }
+    
   };
 
   render() {
@@ -57,20 +80,25 @@ class NewDeck extends Component {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-
-
-        <Card style={{ paddingVertical: 16 }}>
-            <TextInput 
-              title="WHAT IS THE TITLE OF YOUR NEW DECK?" 
+          <Card style={{ paddingVertical: 16 }}>
+            <TextInput
+              title="WHAT IS THE TITLE OF YOUR NEW DECK?"
               value={title}
               onChangeText={title => this.setState({ title })}
             />
 
-            <Button color="green" text="Save" loading={loading} onPress={this.addDeck} />
+            <Button
+              color="green"
+              text="Save"
+              loading={loading}
+              onPress={this.addDeck}
+            />
           </Card>
-            
 
-          <DropdownAlert updateStatusBar={false} ref={ref => (this.dropdown = ref)} />
+          <DropdownAlert
+            updateStatusBar={false}
+            ref={ref => (this.dropdown = ref)}
+          />
         </View>
       </TouchableWithoutFeedback>
     );
@@ -81,9 +109,10 @@ const mapStateToProps = state => ({
   decksState: state.decks
 });
 
-const mapDispatchToProps = dispatch => ({
-  addDeck: title => dispatch(DecksAction.addDeck(title))
-});
+const mapDispatchToProps = {
+  addDeck: DecksAction.addDeck,
+  updateDeck: DecksAction.updateDeck
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewDeck);
 

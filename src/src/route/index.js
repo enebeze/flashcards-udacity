@@ -18,7 +18,7 @@ const HomeNavigator = StackNavigator(
     NewCard: { screen: NewCard }
   },
   {
-    headerMode: "none",
+    headerMode: "none"
   }
 );
 
@@ -36,16 +36,16 @@ const Tab = TabNavigator(
     About: { screen: About }
   },
   {
+    swipeEnabled: false,
+    animationEnabled: false,
     tabBarOptions: {
-      // activeTintColor: "#479484",
-      // inactiveTintColor: "gray"
       activeTintColor: "#47d259",
         inactiveTintColor: "#fff",
         activeBackgroundColor: "#1f9cd4",
         inactiveBackgroundColor: "#1f9cd4",
       style: { 
         backgroundColor: Platform.OS === 'ios' ? '#1f9cd4' : '#0288d1',
-      }
+      },
     }
   }
 );
@@ -55,7 +55,7 @@ const RootNavigator = StackNavigator({
 },
 {
   navigationOptions: {
-    headerStyle: { backgroundColor: "#0288d1"},
+    headerStyle: { backgroundColor: "#0288d1", elevation: null },
     headerTitleStyle: {
       color: "#fff",
   }

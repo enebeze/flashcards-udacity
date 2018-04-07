@@ -22,22 +22,20 @@ class Details extends Component {
   };
   
   render() {
-    const { title, cardCount } = this.props.card;
+    const { card } = this.props;
     return (
       <View style={{ flex: 1, backgroundColor: "#fff" }} >
         <View>
 
           <CardDeck
-              title={title}
-              cards={cardCount}
+              title={card.title}
+              cards={card.cardCount}
               onPress={() => {} }
             />
-            
-          
+
         </View>
-        
         <View style={{ alignItems: "center" }} >
-          <Button color="green" text="Add Card" onPress={() => { this.props.navigation.navigate("NewCard", title) }} />
+          <Button color="green" text="Add Card" onPress={() => { this.props.navigation.navigate("NewCard") }} />
           <Button color="blue" text="Start Quiz" onPress={() => { }} />
         </View>
       </View>
@@ -46,7 +44,7 @@ class Details extends Component {
 }
 
 const mapStateToProps = state => ({
-  card: state.decks.cardSelected
+  card: state.decks.deckSelected
 })
 
 export default connect(mapStateToProps)(Details)

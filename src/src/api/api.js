@@ -7,11 +7,21 @@ export const getAll = () => {
 }
 
 export const addDeck = title => {
-  return refDeck.child(title).set({ title });
+  const key = refDeck.push().key;
+  refDeck.child(key).set({ title, key });
+  return key;
 }
 
-export const addCard = (title, card) => {
-  const key = refDeck.child(title).child("questions").push().key;
-  refDeck.child(title).child(`questions/${key}`).set(card);
-  return key;
+export const updateDeck = (key, title) => {
+  return refDeck.child(`${key}/title`).set(title);
+}
+
+export const deleteDeck = key => {
+  return refDeck.child(key).remove();
+}
+
+export const addCard = (deckKey, card) => {
+  card.key = refDeck.child(deckKey).child("questions").push().key;
+  refDeck.child(deckKey).child(`questions/${card.key}`).set(card);
+  return card.key;
 }

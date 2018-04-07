@@ -11,7 +11,7 @@ function CardDeck({ onPress, title, cards }) {
    })}>
       <TouchableOpacity style={styles.card} onPress={onPress}>
         <Text style={{ fontWeight: "bold", fontSize: 18 }}>{title}</Text>
-        <Text>{`${cards} cards` }</Text>
+        <Text>{cards} cards</Text>
       </TouchableOpacity>
     </Card>
   );

@@ -19,7 +19,6 @@ import DecksAction from "store/ducks/decks";
 import { connect } from "react-redux";
 
 const INITIAL_STATE = {
-  deck: "",
   question: "",
   answer: ""
 };
@@ -38,18 +37,14 @@ class NewCard extends Component {
 
   state = INITIAL_STATE;
 
-  componentDidMount() {
-    const { state: { params } } = this.props.navigation;
-    this.setState({ deck: params });
-  }
 
   componentWillReceiveProps(nextProps) {
-    const { added, error } = nextProps.decksState;
-    if (added) {
+    const { success, error } = nextProps.decksState;
+    if (success) {
       this.dropdown.alertWithType(
         "success",
         "Success",
-        "New card added successfully."
+        "New card saved successfully."
       );
       this.setState(INITIAL_STATE);
     }
@@ -61,20 +56,22 @@ class NewCard extends Component {
   addCard = () => {
     Keyboard.dismiss();
 
-    const { deck, question, answer } = this.state;
-    this.props.addCard(deck, { question, answer });
+    const { question, answer } = this.state;
+    const { deckSelected } = this.props.decksState;
+
+    this.props.addCard(deckSelected.key, { question, answer });
   };
 
   render() {
-    const { title, question, answer } = this.state;
-    const { loading, error } = this.props.decksState;
+    const { question, answer } = this.state;
+    const { deckSelected, loading, error } = this.props.decksState;
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <Card style={{ paddingVertical: 16 }}>
 
-           <Text style={{ paddingBottom: 26, fontWeight: "bold", textAlign: "center" }} >{`New Card for ${this.state.deck}`} </Text>
+            <Text style={{ paddingBottom: 26, fontWeight: "bold", textAlign: "center" }} >{`New Card for ${deckSelected.title}`} </Text>
 
             <TextInput
               title="QUESTION"
@@ -107,9 +104,9 @@ const mapStateToProps = state => ({
   decksState: state.decks
 });
 
-const mapDispatchToProps = dispatch => ({
-  addCard: (title, card) => dispatch(DecksAction.addCard(title, card))
-});
+const mapDispatchToProps = {
+  addCard: DecksAction.addCard
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewCard);
 
