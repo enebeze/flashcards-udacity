@@ -7,13 +7,16 @@ import {
   Button,
   TouchableOpacity,
   ActivityIndicator,
-  FlatList
+  FlatList,
+  Dimensions,
+  Animated
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
 import CardDeck from "../../components/card-deck";
 import ButtonHeader from "../../components/button-header";
+import Header from "../../components/header";
 import { ScrollView } from "react-native-gesture-handler";
 
 import DecksAction from "store/ducks/decks";
@@ -21,6 +24,7 @@ import { connect } from "react-redux";
 
 class Home extends Component {
   static navigationOptions = ({ navigation }) => ({
+    //header: null
     title: "Decks",
     headerRight: (
       <ButtonHeader
@@ -31,13 +35,29 @@ class Home extends Component {
     )
   });
 
-  state = {
-    refreshing: true
+  constructor(props) {
+    super(props);
+
+    this.offset = 0;
+
+    this.state = {
+      scrollOffset: new Animated.Value(0),
+      titleWidth: 0,
+      refreshing: true
+    };
   }
 
   componentDidMount() {
+    this.state.scrollOffset.addListener(({ value }) => (this.offset = value));
     this.props.getAll();
   }
+
+  onScroll = e => {
+    const scrollSensitivity = 4 / 3;
+    const offset = e.nativeEvent.contentOffset.y / scrollSensitivity;
+    this.state.scrollOffset.setValue(offset);
+  };
+
 
   onRefresh = () => {
     if (this.state.refreshing) {
@@ -47,34 +67,45 @@ class Home extends Component {
     this.props.getAll();
   }
 
+  selectedCard = card => {
+    card.cardCount = Object.keys(card.questions || { }).length;
+    this.props.selectedCard(card);
+    this.props.navigation.navigate("Details", card.title);
+  }
+
   render() {
     const { decks, loading, error } = this.props.decks;
-    const array = Object.values(decks);
-    const { refreshing } = this.state;
+    const arrayDecks = Object.values(decks);
+    const { refreshing, scrollOffset } = this.state;
+
+    const screenWidth = Dimensions.get('window').width;
 
     return (
       <View style={styles.container}>
-        {(loading && refreshing) &&  (
-          <ActivityIndicator
-            style={{ marginTop: 20 }}
-            size="large"
-            animating={loading}
-            color="#479484"
-          />
-        )}
+        {/* <Header 
+          title="Flash Cards Udacity" 
+          offset={this.offset} 
+          scrollOffset={scrollOffset} 
+          actionHeaderRight={() => this.props.navigation.navigate("NewDeck")}
+          /> */}
 
         <FlatList
-          data={array}
+          data={arrayDecks}
           keyExtractor={(item) => item.title}
-          renderItem={({item}) => (
+          renderItem={({item}) => {
+            const { title, questions } = item;
+            return (
             <CardDeck
-              title={item.title}
-              cards={item.questions ? item.questions.length : 0}
-              onPress={() => this.props.navigation.navigate("Details", item)}
+              title={title}
+              cards={questions ? Object.keys(questions).length : 0}
+              onPress={() => this.selectedCard(item) }
             />
-          )}
+          )
+          } }
           refreshing={loading}
           onRefresh={this.onRefresh}
+          onScroll={this.onScroll}
+          scrollEventThrottle={20}
         />
       </View>
     );
@@ -92,15 +123,25 @@ const styles = StyleSheet.create({
     padding: 50,
     alignItems: "center",
     justifyContent: "center"
-  }
+  },
+  header: {
+    backgroundColor: '#FD4176',
+    borderBottomWidth: 1,
+    borderColor: 'gainsboro',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingBottom: 8,
+  },
 });
 
 const mapStateToProps = state => ({
   decks: state.decks
 });
 
-const mapDispatchToProps = dispatch => ({
-  getAll: () => dispatch(DecksAction.requestDecks())
-});
+const mapDispatchToProps = {
+  getAll: DecksAction.requestDecks,
+  selectedCard: DecksAction.selectedCard
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

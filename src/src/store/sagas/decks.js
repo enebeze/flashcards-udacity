@@ -1,4 +1,4 @@
-import * as api from "../../api/decks";
+import * as api from "../../api/api";
 
 import { call, put } from "redux-saga/effects";
 import DecksActions from "store/ducks/decks";
@@ -15,9 +15,18 @@ export function* requestDecks() {
 
 export function* addDeck(action) {
   try {
-    yield call(api.add, action.title);
-    yield put(DecksActions.addSuccess(action.title));
+    yield call(api.addDeck, action.title);
+    yield put(DecksActions.addDeckSuccess(action.title));
   } catch (error) {
-    yield put(DecksActions.addFailed(error));
+    yield put(DecksActions.addDeckFailed(error));
+  }
+}
+
+export function* addCard(action) {
+  try {
+    const response = yield call(api.addCard, action.title, action.card);
+    yield put(DecksActions.addCardSuccess(action.title, action.card, response));
+  } catch (error) {
+    yield put(DecksActions.addCardFailed(error));
   }
 }

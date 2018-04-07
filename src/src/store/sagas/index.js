@@ -10,7 +10,7 @@ export default function* root() {
   yield all([
     /* Decks */
     takeLatest(DecksTypes.REQUEST_DECKS, SagasDecks.requestDecks),
-    takeLatest(DecksTypes.ADD, SagasDecks.addDeck)
-    
+    takeLatest(DecksTypes.ADD_DECK, SagasDecks.addDeck),
+    takeLatest(DecksTypes.ADD_CARD, SagasDecks.addCard)
   ]);
 }

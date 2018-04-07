@@ -2,23 +2,33 @@ import React, { Component } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Platform
 } from "react-native";
 
 import DropdownAlert from "react-native-dropdownalert";
+import Button from "../../components/button";
+import Card from "../../components/card";
+import TextInput from "../../components/text-input";
 
 import DecksAction from "store/ducks/decks";
 import { connect } from "react-redux";
 
 class NewDeck extends Component {
-  static navigationOptions = {
-    title: "New Deck"
-  };
+  static navigationOptions = ({navigation}) => ({
+    title: "New Deck",
+    headerLeft: (
+      <ButtonHeader
+        iconName={Platform.OS === "ios" ? "ios-arrow-back" : "md-arrow-back" }
+        left
+        onPress={() => navigation.goBack(null)}
+      />
+    )
+  });
 
   state = {
     title: ""
@@ -47,53 +57,20 @@ class NewDeck extends Component {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <Text
-            style={{
-              fontSize: 42,
-              fontWeight: "bold",
-              textAlign: "center",
-              marginHorizontal: 20,
-              marginTop: 40
-            }}
-          >
-            What is the title of your new deck?
-          </Text>
-          <TextInput
-            placeholder="Name here"
-            value={title}
-            onChangeText={title => this.setState({ title })}
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: "gray",
-              width: "90%",
-              marginVertical: 30,
-              fontSize: 20
-            }}
-          />
 
-          <TouchableOpacity
-            onPress={this.addDeck}
-            style={{
-              width: "30%",
-              backgroundColor: "green",
-              alignItems: "center",
-              paddingVertical: 12,
-              borderRadius: 5,
-              marginTop: 16
-            }}
-          >
-            {loading && (
-              <ActivityIndicator
-                size="small"
-                animating={loading}
-                color="#479484"
-              />
-            )}
 
-            {!loading && <Text style={{ color: "#fff" }}>Save</Text>}
-          </TouchableOpacity>
+        <Card style={{ paddingVertical: 16 }}>
+            <TextInput 
+              title="WHAT IS THE TITLE OF YOUR NEW DECK?" 
+              value={title}
+              onChangeText={title => this.setState({ title })}
+            />
 
-          <DropdownAlert ref={ref => (this.dropdown = ref)} />
+            <Button color="green" text="Save" loading={loading} onPress={this.addDeck} />
+          </Card>
+            
+
+          <DropdownAlert updateStatusBar={false} ref={ref => (this.dropdown = ref)} />
         </View>
       </TouchableWithoutFeedback>
     );
@@ -105,7 +82,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addDeck: title => dispatch(DecksAction.add(title))
+  addDeck: title => dispatch(DecksAction.addDeck(title))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewDeck);
