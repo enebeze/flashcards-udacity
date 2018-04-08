@@ -14,6 +14,7 @@ import DropdownAlert from "react-native-dropdownalert";
 import Button from "../../components/button";
 import Card from "../../components/card";
 import TextInput from "../../components/text-input";
+import ButtonHeader from "../../components/button-header";
 
 import DecksAction from "store/ducks/decks";
 import { connect } from "react-redux";
@@ -88,8 +89,7 @@ class NewDeck extends Component {
             />
 
             <Button
-              color="green"
-              text="Save"
+              text="SAVE"
               loading={loading}
               onPress={this.addDeck}
             />

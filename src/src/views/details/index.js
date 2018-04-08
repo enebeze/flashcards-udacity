@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import CardDeck from "../../components/card-deck";
 import Button from "../../components/button";
+import ButtonHeader from "../../components/button-header";
 
 import { connect } from "react-redux";
 
@@ -22,21 +23,22 @@ class Details extends Component {
   };
   
   render() {
-    const { card } = this.props;
+    const { deck, navigation } = this.props;
+    const canStartQuiz = deck.cardCount > 0;
     return (
       <View style={{ flex: 1, backgroundColor: "#fff" }} >
-        <View>
-
-          <CardDeck
-              title={card.title}
-              cards={card.cardCount}
-              onPress={() => {} }
-            />
-
-        </View>
-        <View style={{ alignItems: "center" }} >
-          <Button color="green" text="Add Card" onPress={() => { this.props.navigation.navigate("NewCard") }} />
-          <Button color="blue" text="Start Quiz" onPress={() => { }} />
+        <CardDeck title={deck.title} cards={deck.cardCount} />
+        
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: 8,
+            paddingTop: 20
+          }}
+        >
+          <Button marginRight={canStartQuiz} text="ADD CARD" onPress={() => { navigation.navigate("NewCard") }} />
+          {canStartQuiz && <Button color="#9642a8" colorText="#fff" marginLeft text="START QUIZ" onPress={() => { navigation.navigate("Quiz") }} />}
         </View>
       </View>
     );
@@ -44,7 +46,7 @@ class Details extends Component {
 }
 
 const mapStateToProps = state => ({
-  card: state.decks.deckSelected
+  deck: state.decks.deckSelected
 })
 
 export default connect(mapStateToProps)(Details)

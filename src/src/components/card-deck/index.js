@@ -6,10 +6,10 @@ import randomColor from "randomcolor";
 function CardDeck({ onPress, title, cards }) {
   return (
     <Card barColor={randomColor({
-      luminosity: 'dark',
-      hue: 'green'
+      luminosity: 'bright',
+      hue: '#8c4ca9'
    })}>
-      <TouchableOpacity style={styles.card} onPress={onPress}>
+      <TouchableOpacity style={styles.card} onPress={onPress} disabled={onPress ? false : true} >
         <Text style={{ fontWeight: "bold", fontSize: 18 }}>{title}</Text>
         <Text>{cards} cards</Text>
       </TouchableOpacity>

@@ -30,7 +30,7 @@ class Home extends Component {
     title: "Decks",
     headerRight: (
       <ButtonHeader
-        iconName="ios-add"
+        iconName="md-add"
         right
         onPress={() => navigation.navigate("NewDeck")}
       />
