@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { NavigationActions } from "react-navigation";
 import {
   View,
   Text,
@@ -49,12 +50,23 @@ class NewDeck extends Component {
   componentWillReceiveProps(nextProps) {
     const { success, error } = nextProps.decksState;
     if (success) {
-      this.dropdown.alertWithType(
-        "success",
-        "Success",
-        "New deck saved successfully."
-      );
-      this.setState({ title: "" });
+      
+      const resetAction = NavigationActions.reset({
+        index: 1,
+        actions: [
+          NavigationActions.navigate({ routeName: 'Home' }),
+          NavigationActions.navigate({ routeName: 'Details' })
+        ],
+      });
+      
+      this.props.navigation.dispatch(resetAction);
+
+      // this.dropdown.alertWithType(
+      //   "success",
+      //   "Success",
+      //   "New deck saved successfully."
+      // );
+      // this.setState({ title: "" });
     }
     if (error) {
       this.dropdown.alertWithType("error", "Error", error.toString());
@@ -91,6 +103,7 @@ class NewDeck extends Component {
             <Button
               text="SAVE"
               loading={loading}
+              size="small"
               onPress={this.addDeck}
             />
           </Card>

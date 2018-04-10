@@ -1,11 +1,25 @@
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+
 import CardDeck from "../../components/card-deck";
 import Button from "../../components/button";
 import ButtonHeader from "../../components/button-header";
+import Card from "../../components/card";
+
+import Result from "./components/result";
+import Notification from "./components/notification";
+import styles from "./styles";
 
 import { connect } from "react-redux";
-import Card from "../../components/card";
+
+const INITIAL_STATE = {
+  cardNumber: 1,
+  cardCount: 0,
+  correct: 0,
+  incorrect: 0,
+  showAnswer: false,
+  finished: false,
+}
 
 class Quiz extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -21,16 +35,11 @@ class Quiz extends Component {
     };
   };
 
-  state = {
-    numberCard: 1,
-
-    showAnswer: false,
-  }
+  state = INITIAL_STATE;
 
   componentDidMount() {
-    const { card } = this.props;
-    console.log(Object.values(card.questions))
-    console.log(card);
+    const cardCount = Object.keys(this.props.deck.questions || {}).length;
+    this.setState({ cardCount });
   }
 
   showAnswerClick = () => {
@@ -40,122 +49,85 @@ class Quiz extends Component {
 
   btnAnswerClick = isCorrect => {
 
-    var { numberCard } = this.state;
+    var { cardNumber, correct, incorrect, cardCount } = this.state;
 
-    numberCard++;
+    if (isCorrect) 
+      correct++
+    else 
+      incorrect++
 
-    this.setState({ numberCard });
+    if (cardCount === cardNumber) {
+      this.setState({ finished: true, correct, incorrect, showAnswer: false});
+    } else {
+      cardNumber++;
+    
+      this.setState({ cardNumber, correct, incorrect, showAnswer: false });  
+    }
+  }
 
+  restartQuiz = () => {
+    const { cardCount } = this.state;
+    this.setState({ ...INITIAL_STATE, cardCount });
   }
 
 
   render() {
-    const { card } = this.props;
-    const { numberCard, showAnswer } = this.state;
-    const questions = Object.values(card.questions);
-    const question = questions[numberCard - 1];
+    const { deck } = this.props;
+    const { cardCount, cardNumber, showAnswer, finished, correct, incorrect } = this.state;
+    const accuracy = `${((correct * 100) / cardCount).toFixed(2)}%`;
+    const questions = Object.values(deck.questions);
+    const question = questions[cardNumber - 1];
 
-    const text = showAnswer ? question.answer : question.question;
+    const textAnswerOrQuestion = showAnswer ? question.answer : question.question;
 
     return (
-      <ScrollView style={{ flex: 1, backgroundColor: "#dde0e4" }}>
-        <View>
-          <Card style={{ paddingVertical: 20, backgroundColor: "#fff" }} >
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text
-                style={{
-                  borderWidth: 2,
-                  borderRadius: 18,
-                  padding: 8,
-                  fontWeight: "900",
-                  borderColor: "#b5a1bd",
-                  color: "#8846a7"
-                }}
-              >
-                {card.title}
+      !finished ? (
+        <ScrollView style={{ flex: 1, backgroundColor: "#dde0e4" }}>
+          <Card style={{ paddingVertical: 20, backgroundColor: "#fff" }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }} >
+              <Text style={styles.labelDeckTitle}>
+                {deck.title}
               </Text>
 
-              <Text style={{ fontWeight: "900", color: "#8846a7", padding: 8 }}>
-                {`${numberCard}/${card.cardCount}`}
+              <Text style={styles.labelCount}>
+                {`${cardNumber}/${cardCount}`}
               </Text>
             </View>
 
-            <Text
-              style={{
-                marginBottom: 40,
-                marginTop: 30,
-                fontSize: 30,
-                textAlign: "center",
-                fontWeight: "900",
-                color: "#2d3c47"
-              }}
-            >
-              {text}
+            <Text style={styles.labelTextAnswerOrQuestion}>
+              {textAnswerOrQuestion}
             </Text>
 
-            <TouchableOpacity onPress={this.showAnswerClick} >
-            <Text
-              style={{
-                textAlign: "center",
-                fontWeight: "900",
-                color: "red",
-                fontSize: 18
-              }}
-            >
-              Show Answer
-            </Text>
+            <TouchableOpacity onPress={this.showAnswerClick}>
+              <Text style={styles.textBtnShowAnswerOrQuestion}>
+                {showAnswer ? "Show Question" : "Show Answer" }
+              </Text>
             </TouchableOpacity>
           </Card>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingHorizontal: 8,
-            paddingTop: 20
-          }}
-        >
         
-          <Button color="#39d687" marginRight colorText="#fff" text="Correct" onPress={this.btnAnswerClick} />
-          <Button color="#e14e60" marginLeft colorText="#fff" text="Incorret" onPress={this.btnAnswerClick} />
-          {/* <TouchableOpacity onPress={this.btnAnswerClick}
-            style={{
-              flex: 1,
-              paddingVertical: 40,
-              backgroundColor: "#39d687",
-              alignItems: "center",
-              marginRight: 8,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ fontWeight: "900", fontSize: 20, color: "#fff" }} >Correct</Text>
-          </TouchableOpacity> */}
-
-          {/* <TouchableOpacity onPress={this.btnAnswerClick}
-            style={{
-              flex: 1,
-              paddingVertical: 40,
-              backgroundColor: "#e14e60",
-              alignItems: "center",
-              marginLeft: 8,
-              borderRadius: 5
-            }}
-          >
-            <Text style={{ fontWeight: "900", fontSize: 20, color: "#fff" }}>Incorret</Text>
-          </TouchableOpacity> */}
-
-          {/* <Button color="green" text="Correct" onPress={() => {}} />
-          <Button color="red" text="Incorret" onPress={() => {}} /> */}
-        </View>
+          {showAnswer && (
+              <View style={styles.containerButtons}>
+                <Button size="big" color="#39d687" marginRight colorText="#fff" text="Correct" onPress={() => this.btnAnswerClick(true) } />
+                <Button size="big" color="#e14e60" marginLeft colorText="#fff" text="Incorret" onPress={() => this.btnAnswerClick(false) } />
+              </View> 
+          )}
         </ScrollView>
+      ) : (
+        <View>
+          <Notification success={correct === cardCount} />
+          <Result correct={correct} incorrect={incorrect} accuracy={accuracy} />
+            <View style={styles.containerButtons}>
+              <Button text="RESTART QUIZ" onPress={this.restartQuiz} />
+              <Button color="#9642a8" colorText="#fff" marginLeft text="BACK TO DECK" onPress={() => { this.props.navigation.goBack() }} />
+            </View>
+        </View>
+      )
     );
   }
 }
 
 const mapStateToProps = state => ({
-  card: state.decks.deckSelected
+  deck: state.decks.decks[state.decks.deckKeySelected]
 });
 
 export default connect(mapStateToProps)(Quiz);

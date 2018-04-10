@@ -24,10 +24,11 @@ class Details extends Component {
   
   render() {
     const { deck, navigation } = this.props;
-    const canStartQuiz = deck.cardCount > 0;
+    const cardCount = Object.keys(deck.questions || {}).length;
+    const canStartQuiz = cardCount > 0;
     return (
       <View style={{ flex: 1, backgroundColor: "#fff" }} >
-        <CardDeck title={deck.title} cards={deck.cardCount} />
+        <CardDeck title={deck.title} cards={cardCount} />
         
         <View
           style={{
@@ -46,7 +47,7 @@ class Details extends Component {
 }
 
 const mapStateToProps = state => ({
-  deck: state.decks.deckSelected
+  deck: state.decks.decks[state.decks.deckKeySelected]
 })
 
 export default connect(mapStateToProps)(Details)

@@ -58,21 +58,22 @@ class NewCard extends Component {
     Keyboard.dismiss();
 
     const { question, answer } = this.state;
-    const { deckSelected } = this.props.decksState;
+    const { deck } = this.props;
 
-    this.props.addCard(deckSelected.key, { question, answer });
+    this.props.addCard(deck.key, { question, answer });
   };
 
   render() {
     const { question, answer } = this.state;
-    const { deckSelected, loading, error } = this.props.decksState;
+    const { loading, error } = this.props.decksState;
+    const { deck } = this.props;
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <Card style={{ paddingVertical: 16 }}>
 
-            <Text style={{ paddingBottom: 26, fontWeight: "bold", textAlign: "center" }} >{`New Card for ${deckSelected.title}`} </Text>
+            <Text style={{ paddingBottom: 26, fontWeight: "bold", textAlign: "center" }} >{`New Card for ${deck.title}`} </Text>
 
             <TextInput
               title="QUESTION"
@@ -85,9 +86,10 @@ class NewCard extends Component {
               onChangeText={answer => this.setState({ answer })}
             />
 
-            <Button
+            <Button              
               text="SAVE"
               loading={loading}
+              size="small"
               onPress={this.addCard}
             />
           </Card>
@@ -101,7 +103,8 @@ class NewCard extends Component {
 }
 
 const mapStateToProps = state => ({
-  decksState: state.decks
+  decksState: state.decks,
+  deck: state.decks.decks[state.decks.deckKeySelected]
 });
 
 const mapDispatchToProps = {

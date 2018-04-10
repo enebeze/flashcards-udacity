@@ -21,7 +21,7 @@ const { Types, Creators } = createActions({
 
   failed: ["error"],
 
-  selectedDeck: ["deck"]
+  selectedDeck: ["key"]
 });
 
 export { Types };
@@ -33,7 +33,7 @@ const INITIAL_STATE = {
   loading: false,
   error: null,
   success: false,
-  deckSelected: null
+  deckKeySelected: null
 };
 
 /* Reducers */
@@ -63,6 +63,7 @@ export const addDeckSuccess = (state, action) => ({
   loading: false,
   error: null,
   decks: { ...state.decks, [action.key]: { title: action.title, key: action.key } },
+  deckKeySelected: action.key,
   success: true
 });
 
@@ -129,17 +130,13 @@ export const addCardSuccess = (state, action) => {
         }
       }
     },
-    success: true,
-    deckSelected: {
-      ...state.deckSelected,
-      cardCount: state.deckSelected.cardCount + 1
-    }
+    success: true
   };
 };
 
 export const selectedDeck = (state, action) => ({
   ...state,
-  deckSelected: action.deck
+  deckKeySelected: action.key
 });
 
 export const failed = (state, action) => ({

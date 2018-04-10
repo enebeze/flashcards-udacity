@@ -69,8 +69,7 @@ class Home extends Component {
   };
 
   selectedDeck = deck => {
-    deck.cardCount = Object.keys(deck.questions || {}).length;
-    this.props.selectedDeck(deck);
+    this.props.selectedDeck(deck.key);
     this.props.navigation.navigate("Details", deck.title);
   };
 
