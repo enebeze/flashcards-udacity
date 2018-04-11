@@ -16,8 +16,11 @@ const { Types, Creators } = createActions({
   deleteDeck: ["key"],
   deleteDeckSuccess: ["key"],
 
-  addCard: ["key", "card"],
-  addCardSuccess: ["key", "card"],
+  saveCard: ["deckKey", "card"],
+  saveCardSuccess: ["deckKey", "card"],
+
+  deleteCard: ["deckKey", "cardKey"],
+  deleteCardSuccess: ["deckKey", "cardKey"],
 
   failed: ["error"],
 
@@ -62,7 +65,10 @@ export const addDeckSuccess = (state, action) => ({
   ...state,
   loading: false,
   error: null,
-  decks: { ...state.decks, [action.key]: { title: action.title, key: action.key } },
+  decks: {
+    ...state.decks,
+    [action.key]: { title: action.title, key: action.key }
+  },
   deckKeySelected: action.key,
   success: true
 });
@@ -89,32 +95,32 @@ export const deleteDeck = (state, action) => ({
   ...state,
   loading: true,
   error: null,
-  success: false,
+  success: false
 });
 
 export const deleteDeckSuccess = (state, action) => {
   const { decks } = state;
   // remove deck
   delete decks[action.key];
-  return ({
+  return {
     ...state,
     loading: false,
     error: false,
     success: true,
-    decks: decks
-  });
-}
+    decks
+  };
+};
 
 /* CARD */
 
-export const addCard = state => ({
+export const saveCard = state => ({
   ...state,
   loading: true,
   error: null,
   success: false
 });
 
-export const addCardSuccess = (state, action) => {
+export const saveCardSuccess = (state, action) => {
   const { decks } = state;
   return {
     ...state,
@@ -122,10 +128,10 @@ export const addCardSuccess = (state, action) => {
     error: null,
     decks: {
       ...decks,
-      [action.key]: {
-        ...decks[action.key],
+      [action.deckKey]: {
+        ...decks[action.deckKey],
         questions: {
-          ...decks[action.key]["questions"],
+          ...decks[action.deckKey]["questions"],
           [action.card.key]: action.card
         }
       }
@@ -133,6 +139,27 @@ export const addCardSuccess = (state, action) => {
     success: true
   };
 };
+
+export const deleteCard = state => ({
+  ...state,
+  loading: true,
+  error: null,
+  success: false
+});
+
+export const deleteCardSuccess = (state, action) => {
+  const { decks } = state;
+  // remove deck
+  delete decks[action.deckKey]["questions"][action.cardKey];
+
+  return ({
+    ...state,
+    loading: false,
+    error: null,
+    success: true,
+    decks
+  })
+}
 
 export const selectedDeck = (state, action) => ({
   ...state,
@@ -158,8 +185,11 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.DELETE_DECK]: deleteDeck,
   [Types.DELETE_DECK_SUCCESS]: deleteDeckSuccess,
 
-  [Types.ADD_CARD]: addCard,
-  [Types.ADD_CARD_SUCCESS]: addCardSuccess,
+  [Types.SAVE_CARD]: saveCard,
+  [Types.SAVE_CARD_SUCCESS]: saveCardSuccess,
+
+  [Types.DELETE_CARD]: deleteCard,
+  [Types.DELETE_CARD_SUCCESS]: deleteCardSuccess,
 
   [Types.SELECTED_DECK]: selectedDeck,
 

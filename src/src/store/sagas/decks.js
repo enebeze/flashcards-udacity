@@ -43,11 +43,25 @@ export function* deleteDeck(action) {
 
 /* CARDS */
 
-export function* addCard(action) {
+export function* saveCard(action) {
   try {
-    action.card.key = yield call(api.addCard, action.key, action.card);
-    yield put(DecksActions.addCardSuccess(action.key, action.card));
+    if (action.card.key) {
+      yield call(api.updateCard, action.deckKey, action.card);
+    } else {
+      action.card.key = yield call(api.addCard, action.deckKey, action.card);
+    }
+
+    yield put(DecksActions.saveCardSuccess(action.deckKey, action.card));
   } catch (error) {
+    yield put(DecksActions.failed(error));
+  }
+}
+
+export function* deleteCard(action) {
+  try {
+    yield call(api.deleteCard, action.deckKey, action.cardKey);
+    yield put(DecksActions.deleteCardSuccess(action.deckKey, action.cardKey));
+  } catch(error) {
     yield put(DecksActions.failed(error));
   }
 }

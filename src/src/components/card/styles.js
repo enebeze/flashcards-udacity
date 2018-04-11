@@ -7,7 +7,8 @@ export default StyleSheet.create({
     borderRadius: 5,
     shadowOpacity: 0.3,
     shadowOffset: { width: 0.5, height: 0.5 },
-    flexDirection: "row"
+    flexDirection: "row",
+    paddingRight: 10
   },
   viewBarraColorLeft: {
     width: 10,

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { TouchableOpacity, ActivityIndicator, Text } from "react-native";
 
-type size = "small" | "medium" | "big";
+type size = "smaller" | "small" | "medium" | "big";
 
 type ButtonProps = {
   loading: boolean,
@@ -16,6 +16,7 @@ type ButtonProps = {
 };
 
 const sizeValue = {
+  smaller: 10,
   small: 20,
   medium: 30,
   big: 40
@@ -52,7 +53,7 @@ class Button extends Component<ButtonProps> {
         {loading && <ActivityIndicator size="small" color={colorText} />}
 
         {!loading && (
-          <Text style={{ color: colorText, fontWeight: "900", fontSize: size === "big" ? 20 : 14 }}>{text}</Text>
+          <Text style={{ color: colorText, fontWeight: "900", fontSize: size === "big" ? 20 : 12 }}>{text}</Text>
         )}
       </TouchableOpacity>
     );

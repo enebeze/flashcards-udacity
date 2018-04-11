@@ -55,18 +55,12 @@ class NewDeck extends Component {
         index: 1,
         actions: [
           NavigationActions.navigate({ routeName: 'Home' }),
-          NavigationActions.navigate({ routeName: 'Details' })
+          NavigationActions.navigate({ routeName: 'Details', params: this.state.title })
         ],
       });
       
       this.props.navigation.dispatch(resetAction);
 
-      // this.dropdown.alertWithType(
-      //   "success",
-      //   "Success",
-      //   "New deck saved successfully."
-      // );
-      // this.setState({ title: "" });
     }
     if (error) {
       this.dropdown.alertWithType("error", "Error", error.toString());

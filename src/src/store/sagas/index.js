@@ -13,6 +13,7 @@ export default function* root() {
     takeLatest(DecksTypes.ADD_DECK, SagasDecks.addDeck),
     takeLatest(DecksTypes.UPDATE_DECK, SagasDecks.updateDeck),
     takeLatest(DecksTypes.DELETE_DECK, SagasDecks.deleteDeck),
-    takeLatest(DecksTypes.ADD_CARD, SagasDecks.addCard)
+    takeLatest(DecksTypes.SAVE_CARD, SagasDecks.saveCard),
+    takeLatest(DecksTypes.DELETE_CARD, SagasDecks.deleteCard)
   ]);
 }

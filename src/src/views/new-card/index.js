@@ -20,23 +20,35 @@ import DecksAction from "store/ducks/decks";
 import { connect } from "react-redux";
 
 const INITIAL_STATE = {
+  key: null,
   question: "",
   answer: ""
 };
 
 class NewCard extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: "New Card",
-    headerLeft: (
-      <ButtonHeader
-        iconName={Platform.OS === "ios" ? "ios-arrow-back" : "md-arrow-back" }
-        left
-        onPress={() => navigation.goBack(null)}
-      />
-    )
-  });
+  static navigationOptions = ({ navigation }) => {
+    const { state: { params }} = navigation;
+    return ({
+      title: params ? "Edit Card" : "New Card",
+      headerLeft: (
+        <ButtonHeader
+          iconName={Platform.OS === "ios" ? "ios-arrow-back" : "md-arrow-back" }
+          left
+          onPress={() => navigation.goBack(null)}
+        />
+      )
+    });
+  }
+    
 
   state = INITIAL_STATE;
+
+  componentDidMount() {
+    const { state: { params }} = this.props.navigation;
+    if (params) {
+      this.setState({ key: params.key, question: params.question, answer: params.answer });
+    }
+  }
 
 
   componentWillReceiveProps(nextProps) {
@@ -45,7 +57,7 @@ class NewCard extends Component {
       this.dropdown.alertWithType(
         "success",
         "Success",
-        "New card saved successfully."
+        "Card saved successfully."
       );
       this.setState(INITIAL_STATE);
     }
@@ -54,13 +66,13 @@ class NewCard extends Component {
     }
   }
 
-  addCard = () => {
+  saveCard = () => {
     Keyboard.dismiss();
 
-    const { question, answer } = this.state;
+    const { question, answer, key } = this.state;
     const { deck } = this.props;
 
-    this.props.addCard(deck.key, { question, answer });
+    this.props.saveCard(deck.key, { question, answer, key });
   };
 
   render() {
@@ -73,7 +85,7 @@ class NewCard extends Component {
         <View style={styles.container}>
           <Card style={{ paddingVertical: 16 }}>
 
-            <Text style={{ paddingBottom: 26, fontWeight: "bold", textAlign: "center" }} >{`New Card for ${deck.title}`} </Text>
+            {/* <Text style={{ paddingBottom: 26, fontWeight: "bold", textAlign: "center" }} >{`New Card for ${deck.title}`} </Text> */}
 
             <TextInput
               title="QUESTION"
@@ -90,7 +102,7 @@ class NewCard extends Component {
               text="SAVE"
               loading={loading}
               size="small"
-              onPress={this.addCard}
+              onPress={this.saveCard}
             />
           </Card>
 
@@ -108,7 +120,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  addCard: DecksAction.addCard
+  saveCard: DecksAction.saveCard
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewCard);

@@ -3,20 +3,25 @@ import { Platform } from 'react-native';
 import { TabNavigator, StackNavigator } from "react-navigation";
 
 import { Ionicons } from "@expo/vector-icons";
+import colors from "../styles/colors";
 
+/* Views */
 import Home from "views/home";
 import About from "views/about";
 import Details from "views/details";
 import NewDeck from "views/new-deck";
 import NewCard from "views/new-card";
 import Quiz from "views/quiz";
+import Cards from "views/cards";
 
+/* Stack Home Navigator */
 const HomeNavigator = StackNavigator(
   {
     Home: { screen: Home },
     Details: { screen: Details },
     NewDeck: { screen: NewDeck },
-    NewCard: { screen: NewCard }
+    NewCard: { screen: NewCard },
+    Cards: { screen: Cards }
   },
   {
     initialRouteName: "Home",
@@ -24,13 +29,13 @@ const HomeNavigator = StackNavigator(
   }
 );
 
+/* Tab Navigator */
 const Tab = TabNavigator(
   {
     Home: { 
         screen: HomeNavigator,
         navigationOptions: {
             tabBarLabel: "Decks",
-            //headerBackTitle: "Decks",
             tabBarIcon: ({ tintColor }) =>  <Ionicons size={30} name="ios-home" style={{ color: tintColor }} />
           }    
         
@@ -41,10 +46,10 @@ const Tab = TabNavigator(
     swipeEnabled: false,
     animationEnabled: false,
     tabBarOptions: {
-        activeTintColor: "#633379",
-        inactiveTintColor: "#fff",
+        activeTintColor: colors.primaryTextColor,
+        inactiveTintColor: colors.secondaryLightColor,
       style: { 
-        backgroundColor: "#8c4ca9",
+        backgroundColor: colors.secondaryTextColor,
       },
       labelStyle: {
         fontWeight: "900"
@@ -53,6 +58,7 @@ const Tab = TabNavigator(
   }
 );
 
+/* Stack Root Navigator */
 const RootNavigator = StackNavigator({
   Root: { screen: Tab },
   Quiz: { screen: Quiz }
@@ -60,9 +66,9 @@ const RootNavigator = StackNavigator({
 {
   mode: "modal",
   navigationOptions: {
-    headerStyle: { backgroundColor: "#8c4ca9", elevation: null },
+    headerStyle: { backgroundColor: colors.primaryColor, elevation: null },
     headerTitleStyle: {
-      color: "#fff",
+      color: colors.secondaryLightColor,
   }
   }
 })

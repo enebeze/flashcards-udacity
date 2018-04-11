@@ -6,6 +6,8 @@ import ButtonHeader from "../../components/button-header";
 
 import { connect } from "react-redux";
 
+import styles from "./styles";
+
 class Details extends Component {
   
   static navigationOptions = ({ navigation }) => {
@@ -23,21 +25,14 @@ class Details extends Component {
   };
   
   render() {
-    const { deck, navigation } = this.props;
-    const cardCount = Object.keys(deck.questions || {}).length;
+    const { deck, cardCount, navigation } = this.props;
     const canStartQuiz = cardCount > 0;
+    
     return (
-      <View style={{ flex: 1, backgroundColor: "#fff" }} >
-        <CardDeck title={deck.title} cards={cardCount} />
+      <View style={styles.container} >
+        <CardDeck title={deck.title} cards={cardCount} onPress={() => this.props.navigation.navigate("Cards", deck.title)} />
         
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingHorizontal: 8,
-            paddingTop: 20
-          }}
-        >
+        <View style={styles.containerButton}>
           <Button marginRight={canStartQuiz} text="ADD CARD" onPress={() => { navigation.navigate("NewCard") }} />
           {canStartQuiz && <Button color="#9642a8" colorText="#fff" marginLeft text="START QUIZ" onPress={() => { navigation.navigate("Quiz") }} />}
         </View>
@@ -46,8 +41,12 @@ class Details extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  deck: state.decks.decks[state.decks.deckKeySelected]
-})
+const mapStateToProps = state => {
+  const deck = state.decks.decks[state.decks.deckKeySelected];
+  return ({
+    deck,
+    cardCount: Object.keys(deck.questions || {}).length
+  })
+}
 
 export default connect(mapStateToProps)(Details)
