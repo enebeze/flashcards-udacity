@@ -13,20 +13,15 @@ export function* requestDecks() {
   }
 }
 
-export function* addDeck(action) {
+export function* saveDeck(action) {
   try {
-    const key = yield call(api.addDeck, action.title);
-    yield put(DecksActions.addDeckSuccess(key, action.title));
-  } catch (error) {
-    yield put(DecksActions.failed(error));
-  }
-}
-
-export function* updateDeck(action) {
-  const { key, title } = action.deck;
-  try {
-    yield call(api.updateDeck, key, title);
-    yield put(DecksActions.updateDeckSuccess(action.deck)); 
+    if (action.deck.key) {
+      yield call(api.updateDeck, action.deck)
+    } else {
+      action.deck.key = yield call(api.addDeck, action.deck);
+    }
+    
+    yield put(DecksActions.saveDeckSuccess(action.deck));
   } catch (error) {
     yield put(DecksActions.failed(error));
   }

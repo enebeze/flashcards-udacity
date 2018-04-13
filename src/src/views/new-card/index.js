@@ -22,7 +22,9 @@ import { connect } from "react-redux";
 const INITIAL_STATE = {
   key: null,
   question: "",
-  answer: ""
+  answer: "",
+  questionValidation: null,
+  answerValidation: null
 };
 
 class NewCard extends Component {
@@ -67,6 +69,9 @@ class NewCard extends Component {
   }
 
   saveCard = () => {
+
+    if (!this.valideForm()) return;
+
     Keyboard.dismiss();
 
     const { question, answer, key } = this.state;
@@ -75,8 +80,24 @@ class NewCard extends Component {
     this.props.saveCard(deck.key, { question, answer, key });
   };
 
+  valideForm = () => {
+    this.setState({ questionValidation: null, answerValidation: null });
+    var isValide = true;
+    if (this.state.question === "") {
+      this.setState({ questionValidation: "This Field is Requerid!"});
+      isValide = false;
+    }
+
+    if (this.state.answer === "") {
+      this.setState({ answerValidation: "This Field is Requerid!"});
+      isValide = false;
+    }
+
+    return isValide;
+  }
+
   render() {
-    const { question, answer } = this.state;
+    const { question, answer, questionValidation, answerValidation } = this.state;
     const { loading, error } = this.props.decksState;
     const { deck } = this.props;
 
@@ -91,11 +112,13 @@ class NewCard extends Component {
               title="QUESTION"
               value={question}
               onChangeText={question => this.setState({ question })}
+              messageValidation={questionValidation}
             />
             <TextInput
               title="ANSWER"
               value={answer}
               onChangeText={answer => this.setState({ answer })}
+              messageValidation={answerValidation}
             />
 
             <Button              

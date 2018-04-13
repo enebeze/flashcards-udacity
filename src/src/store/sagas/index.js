@@ -10,8 +10,7 @@ export default function* root() {
   yield all([
     /* Decks */
     takeLatest(DecksTypes.REQUEST_DECKS, SagasDecks.requestDecks),
-    takeLatest(DecksTypes.ADD_DECK, SagasDecks.addDeck),
-    takeLatest(DecksTypes.UPDATE_DECK, SagasDecks.updateDeck),
+    takeLatest(DecksTypes.SAVE_DECK, SagasDecks.saveDeck),
     takeLatest(DecksTypes.DELETE_DECK, SagasDecks.deleteDeck),
     takeLatest(DecksTypes.SAVE_CARD, SagasDecks.saveCard),
     takeLatest(DecksTypes.DELETE_CARD, SagasDecks.deleteCard)

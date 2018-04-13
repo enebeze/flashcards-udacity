@@ -37,6 +37,7 @@ class NewDeck extends Component {
 
   state = {
     title: "",
+    messageValidation: null,
     key: null
   };
 
@@ -67,21 +68,33 @@ class NewDeck extends Component {
     }
   }
 
-  addDeck = () => {
-    Keyboard.dismiss();
-    const { title, key } = this.state;
+  saveDeck = () => {
 
-    if (key) {
-      this.props.updateDeck({ title, key });
+    /* valide form */
+    if (!this.valideForm()) return;
+
+    Keyboard.dismiss();
+
+    const deck = { 
+      key: this.state.key,
+      title: this.state.title
     }
-    else {
-      this.props.addDeck(title);
-    }
-    
+
+    this.props.saveDeck(deck);
   };
 
+  valideForm = () => {
+    this.setState({ messageValidation: null });
+    if (this.state.title === "") {
+      this.setState({ messageValidation: "This Field is Requerid!"});
+      return false;
+    }
+
+    return true;
+  }
+
   render() {
-    const { title } = this.state;
+    const { title, messageValidation } = this.state;
     const { loading, error } = this.props.decksState;
 
     return (
@@ -92,13 +105,14 @@ class NewDeck extends Component {
               title="WHAT IS THE TITLE OF YOUR NEW DECK?"
               value={title}
               onChangeText={title => this.setState({ title })}
+              messageValidation={messageValidation}
             />
 
             <Button
               text="SAVE"
               loading={loading}
               size="small"
-              onPress={this.addDeck}
+              onPress={this.saveDeck}
             />
           </Card>
 
@@ -117,8 +131,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  addDeck: DecksAction.addDeck,
-  updateDeck: DecksAction.updateDeck
+  saveDeck: DecksAction.saveDeck
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewDeck);
@@ -128,7 +141,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center"
-    //justifyContent: "center"
   },
   title: {
     fontSize: 32

@@ -10,7 +10,6 @@ type ButtonProps = {
   colorText: string,
   marginLeft: boolean,
   marginRight: boolean,
-  disabled: boolean,
   size: size,
   onPress: () => void
 };

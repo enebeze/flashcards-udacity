@@ -7,11 +7,8 @@ const { Types, Creators } = createActions({
   requestDecks: null,
   requestDecksSuccess: ["decks"],
 
-  addDeck: ["title"],
-  addDeckSuccess: ["key", "title"],
-
-  updateDeck: ["deck"],
-  updateDeckSuccess: ["deck"],
+  saveDeck: ["deck"],
+  saveDeckSuccess: ["deck"],
 
   deleteDeck: ["key"],
   deleteDeckSuccess: ["key"],
@@ -54,40 +51,24 @@ export const requestSuccess = (state, action) => ({
   error: null
 });
 
-export const addDeck = state => ({
+export const saveDeck = state => ({
   ...state,
   loading: true,
   error: null,
   success: false
 });
 
-export const addDeckSuccess = (state, action) => ({
+export const saveDeckSuccess = (state, { deck }) => ({
   ...state,
   loading: false,
   error: null,
   decks: {
     ...state.decks,
-    [action.key]: { title: action.title, key: action.key }
+    [deck.key]: state.decks[deck.key]
+      ? { ...state.decks[deck.key], title: deck.title }
+      : { key: deck.key, title: deck.title }
   },
-  deckKeySelected: action.key,
-  success: true
-});
-
-export const updateDeck = (state, action) => ({
-  ...state,
-  loading: true,
-  error: null,
-  success: false
-});
-
-export const updateDeckSuccess = (state, { deck }) => ({
-  ...state,
-  loading: false,
-  error: null,
-  decks: {
-    ...state.decks,
-    [deck.key]: { ...state.decks[deck.key], title: deck.title }
-  },
+  deckKeySelected: deck.key,
   success: true
 });
 
@@ -152,14 +133,14 @@ export const deleteCardSuccess = (state, action) => {
   // remove deck
   delete decks[action.deckKey]["questions"][action.cardKey];
 
-  return ({
+  return {
     ...state,
     loading: false,
     error: null,
     success: true,
     decks
-  })
-}
+  };
+};
 
 export const selectedDeck = (state, action) => ({
   ...state,
@@ -176,11 +157,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.REQUEST_DECKS]: request,
   [Types.REQUEST_DECKS_SUCCESS]: requestSuccess,
 
-  [Types.ADD_DECK]: addDeck,
-  [Types.ADD_DECK_SUCCESS]: addDeckSuccess,
-
-  [Types.UPDATE_DECK]: updateDeck,
-  [Types.UPDATE_DECK_SUCCESS]: updateDeckSuccess,
+  [Types.SAVE_DECK]: saveDeck,
+  [Types.SAVE_DECK_SUCCESS]: saveDeckSuccess,
 
   [Types.DELETE_DECK]: deleteDeck,
   [Types.DELETE_DECK_SUCCESS]: deleteDeckSuccess,

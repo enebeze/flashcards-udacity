@@ -35,21 +35,21 @@ const Tab = TabNavigator(
     Home: { 
         screen: HomeNavigator,
         navigationOptions: {
-            tabBarLabel: "Decks",
+            tabBarLabel: "DECKS",
             tabBarIcon: ({ tintColor }) =>  <Ionicons size={30} name="ios-home" style={{ color: tintColor }} />
           }    
         
     },
-    About: { screen: About }
+    About: { screen: About, navigationOptions: { tabBarLabel: "ABOUT"} }
   },
   {
     swipeEnabled: false,
     animationEnabled: false,
     tabBarOptions: {
-        activeTintColor: colors.primaryTextColor,
-        inactiveTintColor: colors.secondaryLightColor,
+        activeTintColor: colors.secondaryLightColor,
+        inactiveTintColor: colors.primaryTextColor,
       style: { 
-        backgroundColor: colors.secondaryTextColor,
+        backgroundColor: Platform.OS === "ios" ? colors.secondaryTextColor : colors.primaryColor,
       },
       labelStyle: {
         fontWeight: "900"

@@ -9,7 +9,7 @@ export default StyleSheet.create({
   },
   title: {
     fontSize: 12,
-    color:  '#7c8a98',
+    color: "#7c8a98",
     paddingBottom: isIPhone ? 5 : 0,
     marginBottom: 0,
     fontWeight: "800"
@@ -17,12 +17,18 @@ export default StyleSheet.create({
   field: {
     fontWeight: isIPhone ? "500" : "400",
     borderBottomWidth: 1,
-    borderBottomColor: '#e9ecee',
+    borderBottomColor: "#e9ecee",
     fontSize: 15,
     fontWeight: "600",
     paddingBottom: 6,
     paddingTop: 0,
     paddingLeft: 0,
-    color: '#2d3e4b'
+    color: "#2d3e4b"
+  },
+  validationMessage: {
+    color: "red",
+    fontWeight: "900",
+    marginTop: 8,
+    fontSize: 12
   }
 });

@@ -7,9 +7,7 @@ import {
   Button,
   TouchableOpacity,
   ActivityIndicator,
-  FlatList,
-  Dimensions,
-  Animated
+  FlatList
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -17,8 +15,6 @@ import Swipeout from "react-native-swipeout";
 
 import CardDeck from "../../components/card-deck";
 import ButtonHeader from "../../components/button-header";
-import Header from "../../components/header";
-import { ScrollView } from "react-native-gesture-handler";
 
 import DecksAction from "store/ducks/decks";
 import { connect } from "react-redux";
@@ -26,7 +22,6 @@ import Card from "../../components/card";
 
 class Home extends Component {
   static navigationOptions = ({ navigation }) => ({
-    //header: null
     title: "Decks",
     headerRight: (
       <ButtonHeader
@@ -40,25 +35,15 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.offset = 0;
-
     this.state = {
-      scrollOffset: new Animated.Value(0),
       titleWidth: 0,
       refreshing: true
     };
   }
 
   componentDidMount() {
-    this.state.scrollOffset.addListener(({ value }) => (this.offset = value));
     this.props.getAll();
   }
-
-  onScroll = e => {
-    const scrollSensitivity = 4 / 3;
-    const offset = e.nativeEvent.contentOffset.y / scrollSensitivity;
-    this.state.scrollOffset.setValue(offset);
-  };
 
   onRefresh = () => {
     if (this.state.refreshing) {
@@ -78,30 +63,31 @@ class Home extends Component {
   };
 
   editDeck = deck => {
-    this.props.navigation.navigate("NewDeck", deck)
-  }
+    this.props.navigation.navigate("NewDeck", deck);
+  };
 
   renderRow = ({ item }) => {
     let swipeBtns = [
       {
         text: "Delete",
         backgroundColor: "red",
-        onPress: () => { this.deleteDeck(item) }
+        onPress: () => {
+          this.deleteDeck(item);
+        }
       },
       {
         text: "Edit",
         type: "primary",
-        onPress: () => { this.editDeck(item) }
+        onPress: () => {
+          this.editDeck(item);
+        }
       }
     ];
-    
+
     const { title, questions } = item;
 
     return (
-      <Swipeout 
-        autoClose={true}
-        backgroundColor= '#fff'
-        right={swipeBtns}>
+      <Swipeout autoClose={true} backgroundColor="#fff" right={swipeBtns}>
         <CardDeck
           title={title}
           cards={questions ? Object.keys(questions).length : 0}
@@ -114,13 +100,10 @@ class Home extends Component {
   render() {
     const { decks, loading, error } = this.props.decks;
     const arrayDecks = decks ? Object.values(decks) : [];
-    const { refreshing, scrollOffset } = this.state;
-
-    const screenWidth = Dimensions.get("window").width;
+    const { refreshing } = this.state;
 
     return (
       <View style={styles.container}>
-
         <FlatList
           data={arrayDecks}
           keyExtractor={item => item.key}

@@ -6,13 +6,13 @@ export const getAll = () => {
   return refDeck.once("value");
 };
 
-export const addDeck = title => {
+export const addDeck = ({ title }) => {
   const key = refDeck.push().key;
   refDeck.child(key).set({ title, key });
   return key;
 };
 
-export const updateDeck = (key, title) => {
+export const updateDeck = ({ key, title }) => {
   return refDeck.child(`${key}/title`).set(title);
 };
 

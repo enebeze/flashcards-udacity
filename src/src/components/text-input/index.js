@@ -6,6 +6,7 @@ import styles from "./styles";
 type TextInputProps = {
   title: String,
   value: String,
+  messageValidation: String,
   flex: Boolean,
   noEdit: Boolean,
   maxLength?: Number,
@@ -18,7 +19,7 @@ type TextInputProps = {
 export default class MyTextInput extends Component<TextInputProps> {
   static defaultProps = {
     maxLength: 400,
-    secureTextEntry: false
+    secureTextEntry: false,
   };
 
   render() {
@@ -31,7 +32,8 @@ export default class MyTextInput extends Component<TextInputProps> {
       maxLength,
       keyboardType,
       autoCapitalize,
-      secureTextEntry
+      secureTextEntry,
+      messageValidation
     } = this.props;
 
     return (
@@ -48,6 +50,7 @@ export default class MyTextInput extends Component<TextInputProps> {
           autoCapitalize={autoCapitalize}
           secureTextEntry={secureTextEntry}
         />
+        {messageValidation && <Text style={styles.validationMessage} >{messageValidation}</Text>} 
       </View>
     );
   }
