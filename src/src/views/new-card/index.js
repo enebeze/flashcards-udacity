@@ -56,12 +56,17 @@ class NewCard extends Component {
   componentWillReceiveProps(nextProps) {
     const { success, error } = nextProps.decksState;
     if (success) {
-      this.dropdown.alertWithType(
-        "success",
-        "Success",
-        "Card saved successfully."
-      );
-      this.setState(INITIAL_STATE);
+      if (this.state.key) {
+        this.props.navigation.goBack();
+      } else {
+        this.dropdown.alertWithType(
+          "success",
+          "Success",
+          "Card saved successfully."
+        );
+        this.setState(INITIAL_STATE);
+      }
+      
     }
     if (error) {
       this.dropdown.alertWithType("error", "Error", error.toString());

@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform } from 'react-native';
+import { Platform } from "react-native";
 import { TabNavigator, StackNavigator } from "react-navigation";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -32,24 +32,28 @@ const HomeNavigator = StackNavigator(
 /* Tab Navigator */
 const Tab = TabNavigator(
   {
-    Home: { 
-        screen: HomeNavigator,
-        navigationOptions: {
-            tabBarLabel: "DECKS",
-            tabBarIcon: ({ tintColor }) =>  <Ionicons size={30} name="ios-home" style={{ color: tintColor }} />
-          }    
-        
+    Home: {
+      screen: HomeNavigator,
+      navigationOptions: {
+        tabBarLabel: "DECKS",
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons size={30} name="ios-home" style={{ color: tintColor }} />
+        )
+      }
     },
-    About: { screen: About, navigationOptions: { tabBarLabel: "ABOUT"} }
+    About: { screen: About, navigationOptions: { tabBarLabel: "ABOUT" } }
   },
   {
     swipeEnabled: false,
     animationEnabled: false,
     tabBarOptions: {
-        activeTintColor: colors.secondaryLightColor,
-        inactiveTintColor: colors.primaryTextColor,
-      style: { 
-        backgroundColor: Platform.OS === "ios" ? colors.secondaryTextColor : colors.primaryColor,
+      activeTintColor: colors.secondaryLightColor,
+      inactiveTintColor: colors.primaryTextColor,
+      style: {
+        backgroundColor:
+          Platform.OS === "ios"
+            ? colors.secondaryTextColor
+            : colors.primaryColor
       },
       labelStyle: {
         fontWeight: "900"
@@ -59,18 +63,20 @@ const Tab = TabNavigator(
 );
 
 /* Stack Root Navigator */
-const RootNavigator = StackNavigator({
-  Root: { screen: Tab },
-  Quiz: { screen: Quiz }
-},
-{
-  mode: "modal",
-  navigationOptions: {
-    headerStyle: { backgroundColor: colors.primaryColor, elevation: null },
-    headerTitleStyle: {
-      color: colors.secondaryLightColor,
+const RootNavigator = StackNavigator(
+  {
+    Root: { screen: Tab },
+    Quiz: { screen: Quiz }
+  },
+  {
+    mode: "modal",
+    navigationOptions: {
+      headerStyle: { backgroundColor: colors.primaryColor, elevation: null },
+      headerTitleStyle: {
+        color: colors.secondaryLightColor
+      }
+    }
   }
-  }
-})
+);
 
 export default RootNavigator;
