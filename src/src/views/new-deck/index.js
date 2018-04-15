@@ -20,9 +20,13 @@ import ButtonHeader from "../../components/button-header";
 import DecksAction from "store/ducks/decks";
 import { connect } from "react-redux";
 
+import styles from "./styles";
+
 class NewDeck extends Component {
   static navigationOptions = ({ navigation }) => {
-    const { state: { params }} = navigation;
+    const {
+      state: { params }
+    } = navigation;
     return {
       title: params ? "Edit Deck" : "New Deck",
       headerLeft: (
@@ -42,7 +46,9 @@ class NewDeck extends Component {
   };
 
   componentDidMount() {
-    const { state: { params }} = this.props.navigation;
+    const {
+      state: { params }
+    } = this.props.navigation;
     if (params) {
       this.setState({ title: params.title, key: params.key });
     }
@@ -51,17 +57,18 @@ class NewDeck extends Component {
   componentWillReceiveProps(nextProps) {
     const { success, error } = nextProps.decksState;
     if (success) {
-      
       const resetAction = NavigationActions.reset({
         index: 1,
         actions: [
-          NavigationActions.navigate({ routeName: 'Home' }),
-          NavigationActions.navigate({ routeName: 'Details', params: this.state.title })
-        ],
+          NavigationActions.navigate({ routeName: "Home" }),
+          NavigationActions.navigate({
+            routeName: "Details",
+            params: this.state.title
+          })
+        ]
       });
-      
-      this.props.navigation.dispatch(resetAction);
 
+      this.props.navigation.dispatch(resetAction);
     }
     if (error) {
       this.dropdown.alertWithType("error", "Error", error.toString());
@@ -69,16 +76,15 @@ class NewDeck extends Component {
   }
 
   saveDeck = () => {
-
     /* valide form */
     if (!this.valideForm()) return;
 
     Keyboard.dismiss();
 
-    const deck = { 
+    const deck = {
       key: this.state.key,
       title: this.state.title
-    }
+    };
 
     this.props.saveDeck(deck);
   };
@@ -86,12 +92,12 @@ class NewDeck extends Component {
   valideForm = () => {
     this.setState({ messageValidation: null });
     if (this.state.title === "") {
-      this.setState({ messageValidation: "This Field is Requerid!"});
+      this.setState({ messageValidation: "This Field is Requerid!" });
       return false;
     }
 
     return true;
-  }
+  };
 
   render() {
     const { title, messageValidation } = this.state;
@@ -135,14 +141,3 @@ const mapDispatchToProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewDeck);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center"
-  },
-  title: {
-    fontSize: 32
-  }
-});

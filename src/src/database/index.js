@@ -1,5 +1,6 @@
 import * as firebase from "firebase";
 
+/* confi firebase */
 var config = {
   apiKey: "AIzaSyAeGzlFMNIcXwA-Risgf_WpCBsZY_3VswM",
   authDomain: "flashcards-udacity.firebaseapp.com",

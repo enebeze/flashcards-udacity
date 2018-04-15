@@ -1,14 +1,16 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 import Card from "../card";
-import colors from "../../styles/colors";
+import colors from "styles/colors";
+
+import styles from "./styles";
 
 function CardDeck({ onPress, title, cards }) {
   return (
     <Card barColor={colors.primaryDarkColor}>
-      <TouchableOpacity style={styles.card} onPress={onPress} disabled={onPress ? false : true} >
-        <Text style={{ fontWeight: "900", fontSize: 22, color: colors.secondaryTextColor }}>{title}</Text>
-        <Text style={{ fontWeight: "900", fontSize: 18, color: colors.primaryTextColor }} >{cards} cards</Text>
+      <TouchableOpacity style={styles.container} onPress={onPress} disabled={onPress ? false : true} >
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.card} >{cards} cards</Text>
       </TouchableOpacity>
     </Card>
   );
@@ -16,10 +18,3 @@ function CardDeck({ onPress, title, cards }) {
 
 export default CardDeck
 
-const styles = StyleSheet.create({
-  card: {
-    padding: 50,
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});

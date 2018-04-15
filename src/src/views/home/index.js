@@ -20,6 +20,8 @@ import DecksAction from "store/ducks/decks";
 import { connect } from "react-redux";
 import Card from "../../components/card";
 
+import colors from "../../styles/colors";
+
 class Home extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Decks",
@@ -42,6 +44,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    /* get all decks */
     this.props.getAll();
   }
 
@@ -87,7 +90,7 @@ class Home extends Component {
     const { title, questions } = item;
 
     return (
-      <Swipeout autoClose={true} backgroundColor="#fff" right={swipeBtns}>
+      <Swipeout autoClose={true} backgroundColor={colors.secondaryLightColor} right={swipeBtns}>
         <CardDeck
           title={title}
           cards={questions ? Object.keys(questions).length : 0}
@@ -103,7 +106,15 @@ class Home extends Component {
     const { refreshing } = this.state;
 
     return (
-      <View style={styles.container}>
+      <View style={{ flex: 1, backgroundColor: colors.secondaryLightColor }}>
+        {loading && refreshing && (
+            <ActivityIndicator
+              style={{ marginTop: 50 }}
+              size={1}
+              color={colors.primaryDarkColor}
+            />
+          )}
+
         <FlatList
           data={arrayDecks}
           keyExtractor={item => item.key}
@@ -117,29 +128,6 @@ class Home extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff"
-    //alignItems: 'center',
-    //justifyContent: 'center',
-  },
-  card: {
-    padding: 50,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  header: {
-    backgroundColor: "#FD4176",
-    borderBottomWidth: 1,
-    borderColor: "gainsboro",
-    flexDirection: "row",
-    alignItems: "flex-end",
-    justifyContent: "center",
-    paddingBottom: 8
-  }
-});
 
 const mapStateToProps = state => ({
   decks: state.decks

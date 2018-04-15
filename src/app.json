@@ -1,6 +1,11 @@
 {
   "expo": {
+    "name": "Flashcards by Ebenézer",
+    "description": "This app allows users to study a collection of flashcards. With the app, users will be able to create different categories of flashcards called 'decks', add flashcards to those decks, and make the quizes in these decks.",
     "sdkVersion": "25.0.0",
+    "privacy": "public",
+    "githubUrl": "https://github.com/enebeze/flashcards-udacity/",
+    "orientation": "portrait",
     "splash": {
       "image": "./assets/splash.png"
     },

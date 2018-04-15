@@ -11,7 +11,6 @@ function Card({ children, style = { }, barColor}) {
       <View style={{flex: 1}}>
           {children}
       </View>
-      {/* <View style={[styles.viewBarraColorRight, { backgroundColor: barColor }]} /> */}
     </View>
   );
 };

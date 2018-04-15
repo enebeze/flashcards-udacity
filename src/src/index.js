@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Router from "route";
 
 /* notification */
-import { setLocalNotification } from "./helpers/notification";
+import { clearLocalNotification, setLocalNotification, listenerNotification } from "./helpers/notification";
 
 /* redux */
 import { Provider } from "react-redux";
@@ -14,8 +14,13 @@ const store = createStore();
 class App extends Component {
 
   componentDidMount() {
-    /* remember to practice all days */
+    /* notification for remember to practice all days */
     setLocalNotification();
+    
+    this.listener = listenerNotification(notification => {
+      alert("Thanks for your return.");
+      console.log("notification recive", notification);
+    })
   }
 
   render() {

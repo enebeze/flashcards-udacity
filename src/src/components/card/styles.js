@@ -15,11 +15,5 @@ export default StyleSheet.create({
     borderTopLeftRadius: 5,
     borderBottomLeftRadius: 5,
     marginRight: 6
-  },
-  viewBarraColorRight: {
-    width: 10,
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
-    marginLeft: 6
   }
 });

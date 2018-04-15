@@ -3,7 +3,7 @@ import { Platform } from "react-native";
 import { TabNavigator, StackNavigator } from "react-navigation";
 
 import { Ionicons } from "@expo/vector-icons";
-import colors from "../styles/colors";
+import colors from "styles/colors";
 
 /* Views */
 import Home from "views/home";
@@ -24,7 +24,6 @@ const HomeNavigator = StackNavigator(
     Cards: { screen: Cards }
   },
   {
-    initialRouteName: "Home",
     headerMode: "none"
   }
 );

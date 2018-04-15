@@ -1,14 +1,12 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
-import Button from "../../../../components/button";
-
 import styles from "./styles";
 
 const CardRow = ({ question, answer, onPress }) => (
   <TouchableOpacity style={styles.container} onPress={onPress} >
     <View style={{ flex: 1 }}>
-      <View style={{ flexDirection: "row", paddingHorizontal: 8, marginBottom: 12 }}>
+      <View style={styles.containerQ}>
         <Text style={styles.textTitle}>
           Q:
         </Text>
@@ -16,7 +14,7 @@ const CardRow = ({ question, answer, onPress }) => (
           {question}
         </Text>
       </View>
-      <View style={{ flexDirection: "row", paddingHorizontal: 8 }}>
+      <View style={styles.containerA}>
         <Text style={styles.textTitle}>
           A:
         </Text>

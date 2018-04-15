@@ -16,5 +16,14 @@ export default StyleSheet.create({
     marginRight: 4,
     fontWeight: "900",
     color: "#2d3e4b"
+  },
+  containerQ: {
+    flexDirection: "row",
+    paddingHorizontal: 8,
+    marginBottom: 12
+  },
+  containerA: {
+    flexDirection: "row",
+    paddingHorizontal: 8
   }
 });

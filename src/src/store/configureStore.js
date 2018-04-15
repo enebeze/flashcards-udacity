@@ -3,7 +3,7 @@ import createSagaMiddleware from 'redux-saga';
 import logger from 'redux-logger';
 
 export default (rootReducer, rootSaga) => {
-    const middleware = [logger];
+    const middleware = __DEV__ ? [logger] : [];
     const enhancers = [];
 
     /* Saga */

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { clearLocalNotification, setLocalNotification } from "helpers/notification";
+import FlipCard from 'react-native-flip-card'
 
 import CardDeck from "components/card-deck";
 import Button from "components/button";
@@ -40,16 +41,21 @@ class Quiz extends Component {
   state = INITIAL_STATE;
 
   componentDidMount() {
+    /* receive number of cards */
     const cardCount = Object.keys(this.props.deck.questions || {}).length;
     this.setState({ cardCount });
   }
 
   showAnswerClick = () => {
+    /* show answer */
     const showAnswer = !this.state.showAnswer;
     this.setState({ showAnswer });
+
+    this.flip._toggleCard();
   };
 
   btnAnswerClick = isCorrect => {
+
     var { cardNumber, correct, incorrect, cardCount } = this.state;
 
     if (isCorrect) correct++;
@@ -88,24 +94,33 @@ class Quiz extends Component {
     const questions = Object.values(deck.questions);
     const question = questions[cardNumber - 1];
 
-    const textAnswerOrQuestion = showAnswer
-      ? question.answer
-      : question.question;
-
     return !finished ? (
       <ScrollView style={{ flex: 1, backgroundColor: "#dde0e4" }}>
         <Card style={{ paddingVertical: 20, backgroundColor: "#fff" }}>
           <View style={{ flexDirection: "row", justifyContent: "space-between" }} >
             <Text style={styles.labelDeckTitle}>{deck.title}</Text>
-
             <Text style={styles.labelCount}>
               {`${cardNumber}/${cardCount}`}
             </Text>
           </View>
 
-          <Text style={styles.labelTextAnswerOrQuestion}>
-            {textAnswerOrQuestion}
-          </Text>
+            <FlipCard 
+              style={{ borderWidth: 0 }}
+              friction={6}
+              perspective={1000}
+              flipHorizontal={true}
+              flipVertical={false}
+              flip={false}
+              clickable={false}
+              ref={flip => this.flip = flip}
+              >
+              <Text style={styles.labelTextAnswerOrQuestion}>
+                {question.question}
+              </Text>
+              <Text style={styles.labelTextAnswerOrQuestion}>
+                {question.answer}
+              </Text>
+            </FlipCard>
 
           <TouchableOpacity onPress={this.showAnswerClick}>
             <Text style={styles.textBtnShowAnswerOrQuestion}>

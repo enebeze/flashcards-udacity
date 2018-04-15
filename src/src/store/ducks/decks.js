@@ -65,8 +65,8 @@ export const saveDeckSuccess = (state, { deck }) => ({
   decks: {
     ...state.decks,
     [deck.key]: state.decks[deck.key]
-      ? { ...state.decks[deck.key], title: deck.title }
-      : { key: deck.key, title: deck.title }
+      ? { ...state.decks[deck.key], title: deck.title } // udpate deck
+      : { key: deck.key, title: deck.title } // new deck
   },
   deckKeySelected: deck.key,
   success: true

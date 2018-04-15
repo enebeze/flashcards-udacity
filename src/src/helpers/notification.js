@@ -8,7 +8,7 @@ function createNotification() {
     title: "Practice your decks!",
     body: "👋 don't forget to pratice one deck today!",
     ios: {
-      sound: true
+      sound: true,
     },
     android: {
       sound: true,
@@ -34,7 +34,6 @@ export function setLocalNotification() {
             let tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             tomorrow.setHours(18);
-            tomorrow.setMilliseconds(0);
 
             /* create the notification */
             Notifications.scheduleLocalNotificationAsync(createNotification(), {
@@ -53,4 +52,8 @@ export function clearLocalNotification() {
   return AsyncStorage.removeItem(NOTIFICATION_KEY).then(
     Notifications.cancelAllScheduledNotificationsAsync
   );
+}
+
+export function listenerNotification(callback) {
+  return Notifications.addListener(callback);
 }
