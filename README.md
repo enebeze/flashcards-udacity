@@ -6,7 +6,7 @@ adicionar flashcards a esses baralhos, e fazer os quizes nestes baralhos.
 
 # Execute no Expo
 
-https://expo.io/@enebeze/flashcards-by-ebenezer
+https://expo.io/@enebeze/flashcards
 
 # Preview
 
