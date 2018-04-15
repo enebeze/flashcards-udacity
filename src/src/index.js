@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Router from "route";
 
 /* notification */
-import { clearLocalNotification, setLocalNotification, listenerNotification } from "./helpers/notification";
+import { setLocalNotification, listenerNotification } from "./helpers/notification";
 
 /* redux */
 import { Provider } from "react-redux";
